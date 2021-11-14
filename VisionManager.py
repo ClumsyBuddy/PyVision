@@ -6,11 +6,12 @@ import pyautogui as auto
 import enum
 import numpy
 
+#Enum for the different types of screenshots to take
 class ShotType(enum.Enum):
     Single = 1
     Multiple = 2
 
-
+#Class that handles image processing
 class Handle_Images:
     def __init__(self, img_path, x = 0, y = 0, w = auto.size().width, h = auto.size().height, Acc=0.90):
         self.img_path = img_path
@@ -31,21 +32,21 @@ class Handle_Images:
         self.RectY = None
         self.RectW = None
         self.RectH = None
-        self.ToggleScreenShot = False
-
+        self._ToggleScreenShot = False
+    #Toggle boolean
     def ToggleScreenShot(self):
-        self.ToggleScreenShot = not self.ToggleScreenShot
-        if not self.ToggleScreenShot:
+        self._ToggleScreenShot = not self._ToggleScreenShot
+        if not self._ToggleScreenShot:
             self.Reset()
-
+    #reset all img data
     def Reset(self):
         self.Curr_img_grey = None
         self.Loc = (-1, -1)
         self.CenterPoint = ()
-
+    #Return the Rectangle coords of image
     def ReturnRect(self):
         return self.RectX, self.RectY, self.RectW, self.RectH
-
+    #Handles how screenshots will be taken
     def ScreenShot(self, Type, x=0, y=0, w=auto.size().width, h=auto.size().height):
         file_Name = None
         if Type == self._Type.Single:
@@ -54,7 +55,7 @@ class Handle_Images:
             print("Multiple is not working Currently")
             file_Name = self.screen_shot.SingleScreenShot(x=x,y=y,w=w,h=h)
         self.Curr_img_grey = cv.cvtColor(file_Name, cv.COLOR_RGB2GRAY)
-
+    #Checks if matching image is in screenshot
     def Template(self):
         try:
             result = cv.matchTemplate(
@@ -88,19 +89,21 @@ class Handle_Images:
             return True
         self.Loc = (-1, -1)
         return False
-
+#Class that handle taking screenshot
 class ScreenShot:
     _Directory = "image.png"
     _x = 0
     _y = 0
     _w = 0
     _h = 0
+    #Take a single screenshot and choose where to take it
     def SingleScreenShot(Directory=_Directory, x = 0, y = 0, w = auto.size().width, h = auto.size().height):
         monitor = {"top": y, "left": x, "width": w, "height": h}
         with mss.mss() as sct:
             filename = numpy.array(sct.grab(monitor))
         return filename
-
+    #Take multiple screenshot at different coords
+    #WIP not working yet
     def MultipleScreenShots(Directory=_Directory, x=_x, y=_y, w=_w, h=_h):
         file_names = []
         for i in range(100):

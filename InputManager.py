@@ -1,17 +1,18 @@
-import pyautogui as auto
-import pydirectinput as dauto
 import win32api, win32con
-
-
 from time import sleep
-
+from Utility import Counter
+import keyboard
+#Data used for Input interactions
 global InputData
 InputData = {"StoredMousePositions": [],
  "MouseHeldDown":False, "MouseClicked": False,
- "KeyClicked":False}
+ "KeyClicked":False, "KeyHeldDown":False}
 
 
+
+#Clicks mouse with set delay and moves cursor if chosen
 def MouseClick(MoveCursor=False, x=-1, y=-1, delay=0.01):
+    print("MouseClick")
     if MoveCursor:
         sleep(delay)
         win32api.SetCursorPos((x,y))
@@ -20,9 +21,11 @@ def MouseClick(MoveCursor=False, x=-1, y=-1, delay=0.01):
     sleep(delay)
     win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
 
-def GetSingleMouseInteraction(Callback=(), SavePosition=False, *args):
+#Gets a single mouse click, returns true on mouse release
+#Calls callbackk function with arguemensts on release
+def GetSingleMouseInteraction(Callback=lambda:None, SavePosition=False, *args):
     M = win32api.GetKeyState(0x01)
-    if M <= 0:
+    if M >= 0:
         InputData["MouseHeldDown"] = True
         InputData["MouseClicked"] = True
     else:
@@ -32,33 +35,37 @@ def GetSingleMouseInteraction(Callback=(), SavePosition=False, *args):
         GetMousePosition(SavePosition)
         Callback(*args)
 
+
+def IsMouseBeingHeld(Counter: Counter, Callback, *args):
+    M = win32api.GetKeyState(0x01)
+    if M < 0 and Counter.GetValue() < 0:
+        print("Clicked")
+        Callback(*args)
+        Counter.UpdateCounter()
+    if Counter.GetValue() == 2:
+        Counter.Reset()
+    #print(Counter.GetValue())
+    #print(M)
+
+
+
+#Return cursor position and can save Cursor position in list
 def GetMousePosition(SavePosition=False):
-    Pos = auto.position()
+    Pos = win32api.GetCursorPos()
     if SavePosition:
         InputData["StoredMousePositions"].append(Pos)
     return Pos
 
 
-
-def GetKeyPress(Callback=(), Key=None, *args):
-    if Key == None:
-        print("No key selected")
-        return False
-    K = win32api.GetAsyncKeyState(win32api.VkKeyScan(Key))
-    if K >= 0:
+#Gets a single keypress, returns true on key release and calls the 
+#callback function
+def GetKeyPress(Callback=lambda:None, Key=None, *args):
+    if keyboard.is_pressed(Key):
         InputData["KeyClicked"] = True
-    else:
-        if InputData["KeyClicked"]:
-            InputData["KeyClicked"] = False
-            Callback()
-            return True
-        
+        return False
+    elif not keyboard.is_pressed(Key) and InputData["KeyClicked"]:
+        InputData["KeyClicked"] = False
+        Callback(*args)
+        return True
     return False
-
-def InputType(Key, DirectX=False):
-    if DirectX:
-        dauto.press(Key, 1, 0)
-    else:
-        auto.press(Key, 1 , 0)
-
 

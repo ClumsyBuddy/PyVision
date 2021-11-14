@@ -1,6 +1,12 @@
+import pyHook
+import pythoncom
 
+def onclick(event):
+    print event.Position
+    return True
 
-print("Hello")
-
-x = input()
-print(x)
+hm = pyHook.HookManager()
+hm.SubscribeMouseAllButtonsDown(onclick)
+hm.HookMouse()
+pythoncom.PumpMessages()
+hm.UnhookMouse()
