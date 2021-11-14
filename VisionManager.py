@@ -19,12 +19,15 @@ class Handle_Images:
         self.w = w
         self.h = h
         tp = cv.imread(self.img_path)
+        if tp == None:
+            print("Could not load image")
         self.img_grey = cv.cvtColor(tp, cv.COLOR_RGB2GRAY)
         self.img_shape = self.img_grey.shape[::-1]
         self.Curr_img_grey = None
         self.Loc = (-1, -1)
         self.screen_shot = ScreenShot
         self._Type = ShotType
+        self.Accuracy = 0.90
 
 
     def ScreenShot(self, Type, x=0, y=0, w=auto.size().width, h=auto.size().height):
@@ -46,7 +49,7 @@ class Handle_Images:
             method = cv.TM_CCOEFF_NORMED
             )
         min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
-        if max_val >= 0.9:
+        if max_val >= self.Accuracy:
             self.Loc = max_loc
             self.Curr_img_grey = cv.rectangle(
             img = self.Curr_img_grey,

@@ -1,5 +1,4 @@
 from enum import auto
-import types
 from VisionManager import Handle_Images
 from VisionManager import auto
 from VisionManager import ShotType
@@ -12,7 +11,7 @@ from time import sleep
 def PrintInfo():
     print(input.InputData["StoredMousePositions"])
 
-handle = Handle_Images("nose.png")
+handle = Handle_Images("anose.png")
 handle.ScreenShot(ShotType.Single)
 
 ScreenShotToggle = False  
@@ -27,4 +26,4 @@ while True:
                 handle.Loc[0],
                 handle.Loc[1]
             )
-    sleep(0.01)
+    sleep(0.25)

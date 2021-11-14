@@ -8,7 +8,6 @@ from time import sleep
 global InputData
 InputData = {"StoredMousePositions": [], "MouseHeldDown":False, "MouseClicked": False}
 
-Accounts = {"Name1": ("Email", "Password"), "Name2": ("Email", "Password")}
 
 def MouseClick(DirectX=False, x=-1, y=-1):
     if x and y > 0:
