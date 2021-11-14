@@ -1,29 +1,24 @@
-from enum import auto
-from VisionManager import Handle_Images
-from VisionManager import auto
-from VisionManager import ShotType
-
-import InputManager as input
-
-
+#imports
+from VisionManager import Handle_Images, ScreenShot, auto, ShotType
+import InputManager as PlayerInput
 from time import sleep
 
-def PrintInfo():
-    print(input.InputData["StoredMousePositions"])
-
-handle = Handle_Images("anose.png")
+#Gloabl Variables
+handle = Handle_Images("Dot.png", Acc=0.90)
 handle.ScreenShot(ShotType.Single)
 
-ScreenShotToggle = False  
-
+#MainLoop
 while True:
-    input.GetSingleMouseInteraction(PrintInfo, False)
-    if ScreenShotToggle == True:
+    PlayerInput.GetKeyPress(handle.ToggleScreenShot, "o")
+    #PlayerInput.GetSingleMouseInteraction(PrintInfo, False)
+    if handle.ToggleScreenShot == True:
         if handle.Template() == False:
             handle.ScreenShot(ShotType.Single)
         if handle.Loc[0] > -1 and handle.Loc[1] > -1:
-            auto.click(
-                handle.Loc[0],
-                handle.Loc[1]
+            PlayerInput.MouseClick(
+                True,
+                handle.CenterPoint[0],
+                handle.CenterPoint[1],
+                0.001
             )
-    sleep(0.25)
+    sleep(0.0001)
