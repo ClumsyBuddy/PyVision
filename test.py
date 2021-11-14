@@ -4,7 +4,13 @@ from VisionManager import Handle_Images
 from VisionManager import auto
 from VisionManager import ShotType
 
+import InputManager as input
+
+
 from time import sleep
+
+def PrintInfo():
+    print(input.InputData["StoredMousePositions"])
 
 handle = Handle_Images("nose.png")
 handle.ScreenShot(ShotType.Single)
@@ -12,6 +18,7 @@ handle.ScreenShot(ShotType.Single)
 ScreenShotToggle = False  
 
 while True:
+    input.GetSingleMouseInteraction(PrintInfo, False)
     if ScreenShotToggle == True:
         if handle.Template() == False:
             handle.ScreenShot(ShotType.Single)
