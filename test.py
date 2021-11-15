@@ -25,7 +25,7 @@ while True:
 
   
         #PlayerInput.IsMouseBeingHeld(Callback=PlayerInput.MouseClick, Counter=MainCounter["MC"])
-    #PlayerInput.GetSingleMouseInteraction(SavePosition=True, Callback=PrintInfo)
+    PlayerInput.GetSingleMouseInteraction(SavePosition=True, Callback=PrintInfo)
     if handle._ToggleScreenShot == True:
         if handle.Template() == False:
             handle.ScreenShot(ShotType.Single)

@@ -2,6 +2,7 @@ import win32api, win32con
 from time import sleep
 from Utility import Counter
 import keyboard
+import mouse
 #Data used for Input interactions
 global InputData
 InputData = {"StoredMousePositions": [],
@@ -35,7 +36,7 @@ def GetSingleMouseInteraction(Callback=lambda:None, SavePosition=False, *args):
         GetMousePosition(SavePosition)
         Callback(*args)
 
-
+#Work in progress
 def IsMouseBeingHeld(Counter: Counter, Callback, *args):
     M = win32api.GetKeyState(0x01)
     if M < 0 and Counter.GetValue() < 0:
